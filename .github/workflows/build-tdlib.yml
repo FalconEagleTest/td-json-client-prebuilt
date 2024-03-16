@@ -23,10 +23,7 @@ workflow_dispatch:
         description: 'Environment to run tests against'
         type: environment
         required: true
-push:
-  paths:
-    - '.github/workflows/td-version.json'
-    - '.github/workflows/build-tdlib.yml'
+
 
 jobs:
   build-android:
