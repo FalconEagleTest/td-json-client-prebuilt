@@ -1,7 +1,10 @@
 name: tdlib-build
 
+
+  
+        
 on:
-  workflow_dispatch:
+workflow_dispatch:
     inputs:
       logLevel:
         description: 'Log level'
@@ -20,12 +23,10 @@ on:
         description: 'Environment to run tests against'
         type: environment
         required: true
-        
-on:
-  push:
-    paths:
-      - '.github/workflows/td-version.json'
-      - '.github/workflows/build-tdlib.yml'
+push:
+  paths:
+    - '.github/workflows/td-version.json'
+    - '.github/workflows/build-tdlib.yml'
 
 jobs:
   build-android:
