@@ -27,6 +27,7 @@ on:
     paths:
       - '.github/workflows/td-version.json'
       - '.github/workflows/build-tdlib.yml'
+      - 'https://github.com/tdlib/td'
 
 jobs:
   build-android:
