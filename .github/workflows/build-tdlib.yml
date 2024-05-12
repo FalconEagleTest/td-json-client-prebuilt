@@ -50,7 +50,7 @@ jobs:
           mkdir /opt/android-ndk-tmp
           cd /opt/android-ndk-tmp
           wget -q https://dl.google.com/android/repository/android-ndk-r26d-linux.zip
-          unzip -q android-ndk-r26d-linux-x86_64.zip
+          unzip -q android-ndk-r26d-linux.zip
           mv ./android-ndk-r26d /opt/android-ndk
           cd /opt/android-ndk
           rm -rf /opt/android-ndk-tmp
