@@ -40,17 +40,14 @@ jobs:
         with:
           filename: '.github/workflows/td-version.json'
           prefix: td
-
+      - name: updata
+        run: |
+           sudo apt-get install openjdk-17-jdk
       - name: setup
         run: |
           sudo apt-get install -y make git zlib1g-dev libssl-dev gperf cmake clang libc++-dev libc++abi-dev ninja-build 
-          sudo apt-get install default-jdk
-      - name: updata
-        run: |
-          sudo apt-get update
-          java -version
-          sudo apt-get install default-jre
-          sudo apt-get install default-jdk
+         
+
       - name: clone
         run: |
           git clone https://github.com/tdlib/td.git
