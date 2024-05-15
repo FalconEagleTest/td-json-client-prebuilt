@@ -58,7 +58,7 @@ jobs:
           ./build-tdlib.sh '' '' '' '' 'JSON'
       - name: show tree
         run: |
-           tree . 
+           tree ../tdlib 
       - name: zip
         run: |
           cd td/example/libs
