@@ -47,17 +47,7 @@ jobs:
       - name: docker
         run: |
           sudo apt-get install -y docker
-          
-      - name: download ndk
-        run: |
-          mkdir /opt/android-ndk-tmp
-          cd /opt/android-ndk-tmp
-          wget -q https://dl.google.com/android/repository/android-ndk-r23-linux.zip
-          unzip -q android-ndk-r23-linux.zip
-          mv ./android-ndk-r23 /opt/android-ndk
-          cd /opt/android-ndk
-          rm -rf /opt/android-ndk-tmp
-          export PATH=$PATH:/opt/android-ndk
+        
 
       - name: clone
         run: |
