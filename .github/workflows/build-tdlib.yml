@@ -38,10 +38,8 @@ jobs:
         run: |
           sudo apt install openjdk-17-jre
           sudo apt install openjdk-17-jdk
-          JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
-          export JAVA_HOME
-          PATH=$PATH:JAVA_HOME/bin
-          export PATH
+          export JAVA_HOME="/usr/lib/jvm/openjdk-17
+          export PATH="$PATH:$JAVA_HOME/bin
 
       - name: sdk
         run: |
