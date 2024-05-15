@@ -59,6 +59,6 @@ jobs:
       - name: setup td
         run: |
           cd td/example/android
-          docker build --build-arg TDLIB_INTERFACE=JSON --output tdlib
+          docker buildx build --build-arg TDLIB_INTERFACE=JSON --output tdlib
       
 
