@@ -52,3 +52,17 @@ jobs:
         run: |
           cd td/example/android
           ./build-tdlib.sh '' '' '' '' 'JSON'
+          
+      - name: zip
+        run: |
+          cd td/example/libs
+          zip libs.zip arm64-v8a/libtdjsonandroid.so armeabi-v7a/libtdjsonandroid.so x86/libtdjsonandroid.so x86_64/libtdjsonandroid.so
+
+      - name: Release
+        uses: ncipollo/release-action@v1
+        with:
+          tag: android-${{ env.td_version }}-${{ env.td_commit_hash }}
+          name: Android ${{ env.td_version }}-${{ env.td_commit_hash }}
+          body: https://github.com/tdlib/td/tree/${{ env.td_commit_hash }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          artifacts: 'td/example/libs/libs.zip'
