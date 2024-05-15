@@ -36,6 +36,7 @@ jobs:
           ./check-environment.sh
       - name: sdk
         run: |
+          java -version
           cd td/example/android
           ./fetch-sdk.sh
       - name: openssl
