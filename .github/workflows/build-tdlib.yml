@@ -24,6 +24,7 @@ jobs:
 
       - name: check-environment
         run: |
+          cd td/example/android
           ./check-environment.sh
       
       - name: clone
@@ -39,7 +40,9 @@ jobs:
           ./fetch-sdk.sh
       - name: openssl
         run: |
+          cd td/example/android
           ./build-openssl.sh  
       - name: tdlib build
         run: |
+          cd td/example/android
           ./build-tdlib.sh '' '' '' '' 'JSON'
