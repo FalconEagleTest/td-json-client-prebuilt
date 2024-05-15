@@ -36,7 +36,7 @@ jobs:
           git show --summary
       - name: show tree
         run: |
-           tree td
+           tree .
      
       - name: check-environment
         run: |
@@ -58,7 +58,7 @@ jobs:
           ./build-tdlib.sh '' '' '' '' 'JSON'
       - name: show tree
         run: |
-           tree tdlib   
+           tree . 
       - name: zip
         run: |
           cd td/example/libs
