@@ -11,7 +11,10 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
-
+      - uses: actions/setup-java@v2
+        with:
+          java-version: 17-ea
+          distribution: adopt # zulu, temurin, 
       - name: JSON to variables
         uses: rgarcia-phi/json-to-variables@v1.1.0
         with:
@@ -20,6 +23,7 @@ jobs:
 
       - name: setup
         run: |
+          java --version
           sudo apt-get install -y make git zlib1g-dev libssl-dev gperf cmake clang libc++-dev libc++abi-dev ninja-build
 
       
@@ -34,13 +38,7 @@ jobs:
         run: |
           cd td/example/android
           ./check-environment.sh
-      - name: java update
-        run: |
-          sudo apt install openjdk-17-jre
-          sudo apt install openjdk-17-jdk
-          export JAVA_HOME="/usr/lib/jvm/openjdk-17
-          export PATH="$PATH:$JAVA_HOME/bin
-
+      
       - name: sdk
         run: |
           java --version
