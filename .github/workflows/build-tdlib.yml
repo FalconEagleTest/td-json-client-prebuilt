@@ -26,12 +26,6 @@ jobs:
           java --version
           sudo apt-get install -y make git zlib1g-dev libssl-dev gperf cmake clang libc++-dev libc++abi-dev ninja-build
 
-      
-      - name: tree
-        run: |
-          java --version
-          sudo apt-get install -y tree
-
       - name: clone
         run: |
           git clone https://github.com/tdlib/td.git
@@ -40,7 +34,7 @@ jobs:
           git show --summary
       - name: show tree
         run: |
-           tree /td
+           tree td
      
       - name: check-environment
         run: |
@@ -62,7 +56,7 @@ jobs:
           ./build-tdlib.sh '' '' '' '' 'JSON'
       - name: show tree
         run: |
-           tree /td   
+           tree td   
       - name: zip
         run: |
           cd td/example/libs
