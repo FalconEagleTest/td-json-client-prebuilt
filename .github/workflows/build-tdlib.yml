@@ -46,8 +46,10 @@ jobs:
           sudo apt-get install -y make git zlib1g-dev libssl-dev gperf cmake clang libc++-dev libc++abi-dev ninja-build
       - name: docker
         run: |
-          sudo apt-get install -y docker
-        
+          sudo apt-get install ca-certificates curl gnupg
+          sudo install -m 0755 -d /etc/apt/keyrings
+          curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+          sudo chmod a+r /etc/apt/keyrings/docker.gpg
 
       - name: clone
         run: |
@@ -59,6 +61,6 @@ jobs:
       - name: setup td
         run: |
           cd td/example/android
-          docker buildx build --build-arg TDLIB_INTERFACE=JSON --output tdlib
+          docker build --build-arg TDLIB_INTERFACE=JSON --output tdlib
       
 
