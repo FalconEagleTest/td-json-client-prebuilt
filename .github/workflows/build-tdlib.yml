@@ -1,33 +1,10 @@
 name: tdlib-build
 
-
-  
-        
 on:
-  workflow_dispatch:
-      inputs:
-        logLevel:
-          description: 'Log level'
-          required: true
-          default: 'warning'
-          type: choice
-          options:
-          - info
-          - warning
-          - debug
-        tags:
-          description: 'Manual Run'
-          required: false
-          type: boolean
-        environment:
-          description: 'Environment to run tests against'
-          type: environment
-          required: true
   push:
     paths:
       - '.github/workflows/td-version.json'
       - '.github/workflows/build-tdlib.yml'
-      - 'https://github.com/tdlib/td'
 
 jobs:
   build-android:
@@ -124,5 +101,243 @@ jobs:
           body: https://github.com/tdlib/td/tree/${{ env.td_commit_hash }}
           token: ${{ secrets.GITHUB_TOKEN }}
           artifacts: 'td/example/libs/libs.zip'
-      
 
+  build-macos-intel:
+    runs-on: macos-11
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: JSON to variables
+        uses: rgarcia-phi/json-to-variables@v1.1.0
+        with:
+          filename: '.github/workflows/td-version.json'
+          prefix: td
+
+      - name: setup
+        run: |
+          brew install gperf cmake coreutils
+
+      - name: clone
+        run: |
+          git clone https://github.com/tdlib/td.git
+          cd td
+          git checkout ${{ env.td_commit_hash }}
+          git show --summary
+
+      - name: setup td
+        run: |
+          cd td/example/ios
+          sed -i '.bak' '11s/.*/platforms="macOS"/' build-openssl.sh
+          sed -i '.bak' '24s/.*/platforms="macOS"/' build.sh
+
+      - name: build ssl
+        run: |
+          cd td/example/ios
+          ./build-openssl.sh
+
+      - name: build
+        run: |
+          cd td/example/ios
+          ./build.sh
+
+#      - name: fake build
+#        run: |
+#          mkdir -p td/example/ios/tdjson/macOS/lib/
+#          cd td/example/ios/tdjson/macOS/lib/
+#          echo "libtdjson" > libtdjson.dylib
+
+      - name: zip
+        run: |
+          cd td/example/ios/tdjson/macOS/lib/
+          zip libtdjson.zip libtdjson.dylib
+
+      - name: Release
+        uses: ncipollo/release-action@v1
+        with:
+          tag: macos-intel-${{ env.td_version }}-${{ env.td_commit_hash }}
+          name: MacOS Intel ${{ env.td_version }}-${{ env.td_commit_hash }}
+          body: https://github.com/tdlib/td/tree/${{ env.td_commit_hash }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          artifacts: 'td/example/ios/tdjson/macOS/lib/libtdjson.zip'
+
+  build-ios:
+    runs-on: macos-11
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: JSON to variables
+        uses: rgarcia-phi/json-to-variables@v1.1.0
+        with:
+          filename: '.github/workflows/td-version.json'
+          prefix: td
+
+      - name: setup
+        run: |
+          brew install gperf cmake coreutils
+
+      - name: clone
+        run: |
+          git clone https://github.com/tdlib/td.git
+          cd td
+          git checkout ${{ env.td_commit_hash }}
+          git show --summary
+
+      - name: setup td
+        run: |
+          cd td
+          mkdir native-build
+          cd native-build
+          cmake ..
+          cmake --build . --target prepare_cross_compiling
+          cd ../example/ios
+          sed -i '.bak' '11s/.*/platforms="iOS"/' build-openssl.sh
+          sed -i '.bak' '24s/.*/platforms="iOS"/' build.sh
+
+      - name: build ssl
+        run: |
+          cd td/example/ios
+          ./build-openssl.sh
+
+      - name: build
+        run: |
+          cd td/example/ios
+          ./build.sh
+
+#      - name: fake build
+#        run: |
+#          mkdir -p td/example/ios/tdjson/iOS/lib/
+#          cd td/example/ios/tdjson/iOS/lib/
+#          echo "libtdjson" > libtdjson.dylib
+
+      - name: zip
+        run: |
+          cd td/example/ios/tdjson/iOS/lib/
+          zip libtdjson.zip libtdjson.dylib
+
+      - name: Release
+        uses: ncipollo/release-action@v1
+        with:
+          tag: ios-${{ env.td_version }}-${{ env.td_commit_hash }}
+          name: iOS ${{ env.td_version }}-${{ env.td_commit_hash }}
+          body: https://github.com/tdlib/td/tree/${{ env.td_commit_hash }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          artifacts: 'td/example/ios/tdjson/iOS/lib/libtdjson.zip'
+
+  build-linux-x64:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: JSON to variables
+        uses: rgarcia-phi/json-to-variables@v1.1.0
+        with:
+          filename: '.github/workflows/td-version.json'
+          prefix: td
+
+      - name: setup
+        run: |
+          sudo apt-get install make git zlib1g-dev libssl-dev gperf php-cli cmake g++
+
+      - name: clone
+        run: |
+          git clone https://github.com/tdlib/td.git
+          cd td
+          git checkout ${{ env.td_commit_hash }}
+          git show --summary
+
+      - name: build
+        run: |
+          cd td
+          rm -rf build
+          mkdir build
+          cd build
+          cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX:PATH=../tdlib ..
+          cmake --build . --target prepare_cross_compiling
+          cd ..
+          php SplitSource.php
+          cd build
+          cmake --build . --target install
+          cd ..
+          php SplitSource.php --undo
+
+#      - name: fake build
+#        run: |
+#          mkdir -p td/tdlib/lib
+#          echo test > td/tdlib/lib/libtdjson.so.1.8.4
+#          echo test > td/tdlib/lib/libtdjson.so
+#          rm td/tdlib/lib/libtdjson.so
+#          mv td/tdlib/lib/libtdjson.so.1.8.4 td/tdlib/lib/libtdjson.so
+
+      - name: zip
+        run: |
+          cd td/tdlib/lib
+          zip libtdjson.zip libtdjson.so
+
+      - name: Release
+        uses: ncipollo/release-action@v1
+        with:
+          tag: linux-x64-${{ env.td_version }}-${{ env.td_commit_hash }}
+          name: Linux x64 ${{ env.td_version }}-${{ env.td_commit_hash }}
+          body: https://github.com/tdlib/td/tree/${{ env.td_commit_hash }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          artifacts: 'td/tdlib/lib/libtdjson.zip'
+
+  build-windows-x64:
+    runs-on: windows-2022
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: JSON to variables
+        uses: rgarcia-phi/json-to-variables@v1.1.0
+        with:
+          filename: '.github/workflows/td-version.json'
+          prefix: td
+
+      - name: clone
+        run: |
+          git clone https://github.com/tdlib/td.git
+          cd td
+          git checkout ${{ env.td_commit_hash }}
+          git show --summary
+
+      - name: setup vcpkg
+        run: |
+          cd td
+          git clone https://github.com/Microsoft/vcpkg.git
+          cd vcpkg
+          git checkout cd5e746ec203c8c3c61647e0886a8df8c1e78e41
+          ./bootstrap-vcpkg.bat
+          ./vcpkg.exe install gperf:x64-windows openssl:x64-windows zlib:x64-windows
+
+      - name: build
+        run: |
+          cd td
+          mkdir build
+          cd build
+          cmake -A x64 -DCMAKE_INSTALL_PREFIX:PATH=../tdlib -DCMAKE_TOOLCHAIN_FILE:FILEPATH=../vcpkg/scripts/buildsystems/vcpkg.cmake ..
+          cmake --build . --target install --config Release
+
+#      - name: fake build
+#        run: |
+#          mkdir -p td/tdlib/bin
+#          echo test > td/tdlib/bin/libcrypto-3-x64.dll
+#          echo test > td/tdlib/bin/libssl-3-x64.dll
+#          echo test > td/tdlib/bin/tdjson.dll
+#          echo test > td/tdlib/bin/zlib1.dll
+
+      - name: zip
+        run: |
+          cd td/tdlib/bin
+          ls
+          mv libcrypto-3-x64.dll libcrypto-1_1.dll
+          mv libssl-3-x64.dll libssl-1_1.dll
+          7z a -tzip dlls.zip libcrypto-1_1.dll libssl-1_1.dll tdjson.dll zlib1.dll
+
+      - name: Release
+        uses: ncipollo/release-action@v1
+        with:
+          tag: windows-x64-${{ env.td_version }}-${{ env.td_commit_hash }}
+          name: Windows x64 ${{ env.td_version }}-${{ env.td_commit_hash }}
+          body: https://github.com/tdlib/td/tree/${{ env.td_commit_hash }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          artifacts: 'td/tdlib/bin/dlls.zip'
