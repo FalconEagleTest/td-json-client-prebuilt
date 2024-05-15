@@ -20,7 +20,9 @@ jobs:
         with:
           filename: '.github/workflows/td-version.json'
           prefix: td
-
+      - name: show tree
+        run: |
+           tree .
       - name: setup
         run: |
           java --version
@@ -56,7 +58,7 @@ jobs:
           ./build-tdlib.sh '' '' '' '' 'JSON'
       - name: show tree
         run: |
-           tree td   
+           tree tdlib   
       - name: zip
         run: |
           cd td/example/libs
