@@ -34,9 +34,13 @@ jobs:
         run: |
           cd td/example/android
           ./check-environment.sh
+      - name: java update
+        run: |
+          sudo apt install openjdk-17-jre
+          sudo apt install openjdk-17-jdk
       - name: sdk
         run: |
-          java -version
+          java --version
           cd td/example/android
           ./fetch-sdk.sh
       - name: openssl
