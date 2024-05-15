@@ -22,10 +22,7 @@ jobs:
         run: |
           sudo apt-get install -y make git zlib1g-dev libssl-dev gperf cmake clang libc++-dev libc++abi-dev ninja-build
 
-      - name: check-environment
-        run: |
-          cd td/example/android
-          ./check-environment.sh
+      
       
       - name: clone
         run: |
@@ -33,7 +30,10 @@ jobs:
           cd td
           git checkout ${{ env.td_commit_hash }}
           git show --summary
-
+      - name: check-environment
+        run: |
+          cd td/example/android
+          ./check-environment.sh
       - name: sdk
         run: |
           cd td/example/android
