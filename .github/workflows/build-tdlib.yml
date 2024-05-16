@@ -55,15 +55,8 @@ jobs:
       - name: tdlib build
         run: |
           cd td/example/android
-          ./build-tdlib.sh '' '' '' '' 'JSON'
-      - name: show tree
-        run: |
-           tree ../tdlib 
-      - name: zip
-        run: |
-          cd td/example/libs
-          zip libs.zip arm64-v8a/libtdjsonandroid.so armeabi-v7a/libtdjsonandroid.so x86/libtdjsonandroid.so x86_64/libtdjsonandroid.so
-
+          ./build-tdlib.sh '' '' '' '' 'JSON
+          
       - name: Release
         uses: ncipollo/release-action@v1
         with:
@@ -71,7 +64,7 @@ jobs:
           name: Android ${{ env.td_version }}-${{ env.td_commit_hash }}
           body: https://github.com/tdlib/td/tree/${{ env.td_commit_hash }}
           token: ${{ secrets.GITHUB_TOKEN }}
-          artifacts: 'td/example/libs/libs.zip'
+          artifacts: 'td/example/android/tdlib/tdlib.zip'
   build-macos-intel:
     runs-on: macos-11
     steps:
