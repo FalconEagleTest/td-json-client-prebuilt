@@ -55,7 +55,7 @@ jobs:
       - name: tdlib build
         run: |
           cd td/example/android
-          ./build-tdlib.sh '' '' '' '' 'JSON
+          ./build-tdlib.sh '' '' '' '' 'JSON'
           
       - name: Release
         uses: ncipollo/release-action@v1
