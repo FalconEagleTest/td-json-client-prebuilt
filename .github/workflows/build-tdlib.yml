@@ -268,7 +268,7 @@ jobs:
           cd td
           git clone https://github.com/Microsoft/vcpkg.git
           cd vcpkg
-          git checkout cd5e746ec203c8c3c61647e0886a8df8c1e78e41
+          git checkout 
           ./bootstrap-vcpkg.bat
           ./vcpkg.exe install gperf:x64-windows openssl:x64-windows zlib:x64-windows
 
