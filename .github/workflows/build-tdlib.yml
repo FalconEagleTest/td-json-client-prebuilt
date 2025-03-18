@@ -56,6 +56,11 @@ jobs:
           cd td/example/android
           ./fetch-sdk.sh
   
+      - name: Build OpenSSL for Android
+        run: |
+          cd td/example/android
+          ./build-openssl.sh
+  
       - name: Build TDLib for Android
         run: |
           cd td/example/android
@@ -66,6 +71,7 @@ jobs:
         with:
           name: tdlib-android
           path: td/example/android/tdlib/tdlib.zip
+
 
 
   build-macos-intel:
