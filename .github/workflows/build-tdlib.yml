@@ -39,28 +39,34 @@ jobs:
         with:
           java-version: 17
           distribution: adopt
-
+  
       - name: Setup dependencies
         run: |
           sudo apt-get install -y make git zlib1g-dev libssl-dev gperf cmake clang libc++-dev libc++abi-dev ninja-build
-
+  
       - name: Clone TDLib
         run: |
           git clone https://github.com/tdlib/td.git
           cd td
           git checkout master
           git show --summary
-
+  
+      - name: Fetch Android SDK
+        run: |
+          cd td/example/android
+          ./fetch-sdk.sh
+  
       - name: Build TDLib for Android
         run: |
           cd td/example/android
           ./build-tdlib.sh '' '' '' '' 'JSON'
-
+  
       - name: Upload Android Build
         uses: actions/upload-artifact@v4
         with:
           name: tdlib-android
           path: td/example/android/tdlib/tdlib.zip
+
 
   build-macos-intel:
     if: github.event.inputs.build_macos == 'true'
