@@ -57,7 +57,7 @@ jobs:
           ./build-tdlib.sh '' '' '' '' 'JSON'
 
       - name: Upload Android Build
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: tdlib-android
           path: td/example/android/tdlib/tdlib.zip
@@ -84,7 +84,7 @@ jobs:
           ./build.sh
 
       - name: Upload macOS Build
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: tdlib-macos
           path: td/example/ios/tdjson/macOS/lib/libtdjson.zip
@@ -111,7 +111,7 @@ jobs:
           ./build.sh
 
       - name: Upload iOS Build
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: tdlib-ios
           path: td/example/ios/tdjson/iOS/lib/libtdjson.zip
@@ -175,7 +175,7 @@ jobs:
           cmake --build . --target install --config Release
 
       - name: Upload Windows Build
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: tdlib-windows
           path: td/tdlib/bin/dlls.zip
